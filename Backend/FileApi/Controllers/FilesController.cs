@@ -1,12 +1,9 @@
-
-
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using System.Threading.Tasks;
 using FileApi.Services;
 using Microsoft.AspNetCore.Http;
-using  FileApi.Models; 
-
+using FileApi.Models;
 
 namespace FileApi.Controllers
 {
@@ -21,8 +18,11 @@ namespace FileApi.Controllers
             _mongoDbService = mongoDbService;
         }
 
-        //  Get All Files
-       [HttpGet]
+        /// <summary>
+        /// Retrieves all uploaded files with their metadata.
+        /// </summary>
+        /// <returns>A list of file metadata.</returns>
+        [HttpGet]
         public async Task<IActionResult> GetAllFiles()
         {
             try
@@ -40,8 +40,12 @@ namespace FileApi.Controllers
             }
         }
 
-
-        //  Upload File
+        /// <summary>
+        /// Uploads a file to the server and stores it in MongoDB GridFS.
+        /// </summary>
+        /// <param name="file">The file to upload.</param>
+        /// <param name="description">Optional description for the file.</param>
+        /// <returns>Success message with file ID.</returns>
         [HttpPost("upload")]
         public async Task<IActionResult> UploadFile([FromForm] IFormFile file, [FromForm] string? description)
         {
@@ -61,7 +65,11 @@ namespace FileApi.Controllers
             }
         }
 
-        //  Download File
+        /// <summary>
+        /// Downloads a file by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the file to download.</param>
+        /// <returns>The file as a binary stream.</returns>
         [HttpGet("{id}")]
         public async Task<IActionResult> DownloadFile(string id)
         {
@@ -79,7 +87,12 @@ namespace FileApi.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-        //  Get File Details (Metadata Only)
+
+        /// <summary>
+        /// Retrieves metadata for a specific file.
+        /// </summary>
+        /// <param name="id">The ID of the file.</param>
+        /// <returns>File metadata including name, upload date, and description.</returns>
         [HttpGet("details/{id}")]
         public async Task<IActionResult> GetFileDetails(string id)
         {
@@ -98,8 +111,11 @@ namespace FileApi.Controllers
             }
         }
 
-
-        // Delete File
+        /// <summary>
+        /// Deletes a file by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the file to delete.</param>
+        /// <returns>Success message if deletion is successful.</returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFile(string id)
         {
